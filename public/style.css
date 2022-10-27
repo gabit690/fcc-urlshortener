@@ -1,8 +1,13 @@
+:root {
+  --background: #000000;
+  --foreground: #ffffff;
+}
+
 body {
   font-family: Arial, sans-serif;
   font-size: 16px;
-  color: #222;
-  background-color: #fff;
+  color: var(--foreground);
+  background-color: var(--background);
   text-align: center;
   line-height: 1.4em;
 }
@@ -16,10 +21,9 @@ h3 {
   margin-top: 30px;
 }
 
-
-
-.user-stories li {
+li {
   margin-bottom: 1em;
+  text-align: start;
 }
 
 a {
@@ -43,4 +47,11 @@ input {
 input[type='text'] {
   width: 220px;
   text-align: center;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+ol {
+  width: 600px;
+  margin: auto;
 }
