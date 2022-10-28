@@ -12,7 +12,7 @@ app.use(cors());
 
 app.use('/public', express.static(`${__dirname}/public`));
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -21,9 +21,8 @@ app.get('/', function(req, res) {
 const urls = [];
 
 app.post('/api/shorturl', (req, res) => {
-  console.log("MAIN");
   let url = req.body.url.replace(/\/*$/, '');
-  let validUrl = url.replace(/^[^.]+\./, '');
+  let validUrl = url.replace(/^https:\/\/(www.)?/, '');
   dns.lookup(validUrl, (err, address, family) => {
     if (err) {
       res.json({ error: 'invalid url' })
