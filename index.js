@@ -10,12 +10,12 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 
-app.use('/public', express.static(`${process.cwd()}/public`));
+app.use('/public', express.static(`${__dirname}/public`));
 app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(bodyParser.json());
 
 app.get('/', function(req, res) {
-  res.sendFile(process.cwd() + '/views/index.html');
+  res.sendFile(__dirname + '/views/index.html');
 });
 
 const urls = [];
