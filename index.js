@@ -4,6 +4,7 @@ const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const dns = require('dns');
+const { url } = require('inspector');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -21,19 +22,18 @@ app.get('/', function(req, res) {
 const urls = [];
 
 app.post('/api/shorturl', (req, res) => {
-  let url = req.body.url.replace(/\/*$/, '');
-  let validUrl = url.replace(/^https:\/\/(www.)?/, '');
-  dns.lookup(validUrl, (err, address, family) => {
+  let url = new URL(req.body.url);
+  dns.lookup(url.hostname, (err, address, family) => {
     if (err) {
       res.json({ error: 'invalid url' })
     }
     else {
-      if (!urls.includes(url)) {
-        urls.push(url);
+      if (!urls.includes(url.origin)) {
+        urls.push(url.origin);
       }
       res.json({
-        original_url: url,
-        short_url: urls.indexOf(url) + 1
+        original_url: url.origin,
+        short_url: urls.indexOf(url.origin) + 1
       });
     }
   });
@@ -42,6 +42,12 @@ app.post('/api/shorturl', (req, res) => {
 app.get('/api/shorturl/:id', (req, res) => {
   const externarlUrl = urls[req.params.id - 1];
   res.redirect(externarlUrl);
+});
+
+app.get('/urls', (req, res) => {
+  res.json({
+    links: urls
+  });
 });
 
 app.listen(port, function() {
