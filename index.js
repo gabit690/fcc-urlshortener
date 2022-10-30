@@ -4,7 +4,6 @@ const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const dns = require('dns');
-const { url } = require('inspector');
 
 // Basic Configuration
 const port = process.env.PORT || 3000;
@@ -28,12 +27,12 @@ app.post('/api/shorturl', (req, res) => {
       res.json({ error: 'invalid url' })
     }
     else {
-      if (!urls.includes(url.origin)) {
-        urls.push(url.origin);
+      if (!urls.includes(req.body.url)) {
+        urls.push(req.body.url);
       }
       res.json({
-        original_url: url.origin,
-        short_url: urls.indexOf(url.origin) + 1
+        original_url: req.body.url,
+        short_url: urls.indexOf(req.body.url) + 1
       });
     }
   });
@@ -42,12 +41,6 @@ app.post('/api/shorturl', (req, res) => {
 app.get('/api/shorturl/:id', (req, res) => {
   const externarlUrl = urls[req.params.id - 1];
   res.redirect(externarlUrl);
-});
-
-app.get('/urls', (req, res) => {
-  res.json({
-    links: urls
-  });
 });
 
 app.listen(port, function() {
